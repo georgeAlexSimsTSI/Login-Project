@@ -27,11 +27,14 @@ void LoginSystem::addNewUser() noexcept
     userSecretPrompt = "Enter your secret: ";
 
     userInput::validateInput(userName, userNamePrompt);
+
     userInput::validateInput(userPassword, userPasswordPrompt);
+    size_t userPasswordHash = std::hash<std::string>{}(userPassword);
+
     std::cout << userSecretPrompt << "\n";
     std::getline(std::cin, userSecret);
 
-    User user = User(userName_t{userName}, userPassword_t{userPassword}, userSecret_t{userSecret});
+    User user = User(userName_t{userName}, userPassword_t{userPasswordHash}, userSecret_t{userSecret});
 
     if (addUser(user))
     {
@@ -96,7 +99,9 @@ void LoginSystem::loginScreen()
     userInput::validateInput(userName, namePrompt);
     userInput::validateInput(userPassword, passwordPrompt);
 
-    auto user = userLogIn(userName_t{userName}, userPassword_t{userPassword});
+    size_t userPasswordHash = std::hash<std::string>{}(userPassword);
+
+    auto user = userLogIn(userName_t{userName}, userPassword_t{userPasswordHash});
 
     if (user == nullptr)
     {
@@ -116,7 +121,6 @@ void LoginSystem::run()
     bool loopCondition = true;
     while (loopCondition)
     {
-        system("cls");
         std::string inputMessage = "To attempt a login enter 1: \nTo add a new user enter 2: \nTo exit the application enter 3: \nInput: ";
         int userInput = 0;
         userInput::validateInput(userInput, inputMessage);
@@ -135,7 +139,6 @@ void LoginSystem::run()
         default:
             std::cout << "Unrecognized choice\n";
         }
-        system("pause"); // for output formatting, will change later
     }
     std::cout << "Good bye";
 }
@@ -171,13 +174,11 @@ void LoginSystem::loadFromFile()
         json j;
         file >> j;
 
-        std::cout << j.dump();
-
         for (int i = 0; i < j.size(); ++i)
         {
             auto tmp = j[i];
             auto name = static_cast<std::string>(j[i]["username"]);
-            auto password = static_cast<std::string>(j[i]["password"]);
+            auto password = static_cast<size_t>(j[i]["password"]);
             auto secret = static_cast<std::string>(j[i]["secret"]);
             auto admin = static_cast<bool>(j[i]["admin"]);
             User user(userName_t{name}, userPassword_t{password}, userSecret_t{secret}, admin);

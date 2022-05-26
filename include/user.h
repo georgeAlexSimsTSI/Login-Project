@@ -6,7 +6,7 @@
 #include <string>
 
 using userName_t = named_type<std::string, struct userName>;
-using userPassword_t = named_type<std::string, struct userPassword>;
+using userPassword_t = named_type<size_t, struct userPassword>;
 using userSecret_t = named_type<std::string, struct userSecret>;
 
 class User
@@ -20,7 +20,7 @@ private:
 public:
     User(const userName_t &name, const userPassword_t &password, const userSecret_t &secret, const bool &admin) : name(name), secret(secret), password(password), admin(admin) {}
     User(const userName_t &name, const userPassword_t &password, const userSecret_t &secret) : name(name), secret(secret), password(password), admin(false) {}
-    User() : User(userName_t{""}, userPassword_t{""}, userSecret_t{""}){};
+    User() : User(userName_t{""}, userPassword_t{0}, userSecret_t{""}){};
 
     bool logIn(const userPassword_t &enteredPassword) const noexcept;
 

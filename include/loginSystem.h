@@ -7,6 +7,7 @@
 #include <memory>
 #include <string>
 #include <fstream>
+#include <functional>
 
 #include "./user.h"
 #include "./userInput.h"
