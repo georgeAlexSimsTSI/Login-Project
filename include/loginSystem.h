@@ -72,11 +72,15 @@ private:
      * @brief will take user inputs and attempt to login, if successful it will then call the relevant menu
      *
      */
-    void loginScreen();
+    void loginScreen() noexcept;
 
-    void saveToFile();
+    void saveToFile() noexcept;
 
-    void loadFromFile();
+    void loadFromFile() noexcept;
+
+    void listUsers() noexcept;
+
+    void changePassword(const std::shared_ptr<User> &user) noexcept;
 
 public:
     explicit LoginSystem(const std::string &fileName) : fileName(fileName) { loadFromFile(); };

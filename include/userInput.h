@@ -6,6 +6,9 @@
 #include <iostream>
 #include <sstream>
 #include <limits>
+#include <functional>
+#include <algorithm>
+#include <cctype>
 using std::cin;
 using std::cout;
 using std::endl;
@@ -36,6 +39,13 @@ namespace userInput
     cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     return val;
   }
+
+  size_t hashPassword(const std::string &password);
+
+  // minimum length 6, must contain letters and numbers, a lower case and a uppercase
+  bool validPassword(const std::string &password);
+
+  size_t enterPassword(const size_t &previous);
 };
 
 #endif
