@@ -28,7 +28,8 @@ void LoginSystem::addNewUser() noexcept
 
     userInput::validateInput(userName, userNamePrompt);
     userInput::validateInput(userPassword, userPasswordPrompt);
-    userInput::validateInput(userSecret, userSecretPrompt);
+    std::cout << userSecretPrompt << "\n";
+    std::getline(std::cin, userSecret);
 
     User user = User(userName_t{userName}, userPassword_t{userPassword}, userSecret_t{userSecret});
 
@@ -134,7 +135,55 @@ void LoginSystem::run()
         default:
             std::cout << "Unrecognized choice\n";
         }
-        system("pause"); // for output formatting, will change later        
+        system("pause"); // for output formatting, will change later
     }
     std::cout << "Good bye";
+}
+
+void LoginSystem::saveToFile()
+{
+    json j;
+
+    int i = 0;
+    for (auto &[userName, user] : users)
+    {
+        auto password = user->getPassword().get();
+        auto secret = user->getSecret().get();
+        auto admin = user->isAdmin();
+        j[i]["username"] = userName;
+        j[i]["password"] = password;
+        j[i]["secret"] = secret;
+        j[i]["admin"] = admin;
+        ++i;
+    }
+
+    std::ofstream outfile{fileName};
+    outfile << j.dump(2);
+    outfile.close();
+}
+
+void LoginSystem::loadFromFile()
+{
+    // std::cout << "Loading from file...\n";
+    if (std::ifstream file{fileName})
+    {
+
+        json j;
+        file >> j;
+
+        std::cout << j.dump();
+
+        for (int i = 0; i < j.size(); ++i)
+        {
+            auto tmp = j[i];
+            auto name = static_cast<std::string>(j[i]["username"]);
+            auto password = static_cast<std::string>(j[i]["password"]);
+            auto secret = static_cast<std::string>(j[i]["secret"]);
+            auto admin = static_cast<bool>(j[i]["admin"]);
+            User user(userName_t{name}, userPassword_t{password}, userSecret_t{secret}, admin);
+            addUser(user);
+        }
+    }
+    // std::cout << "Unable to open file! \n";
+    return;
 }

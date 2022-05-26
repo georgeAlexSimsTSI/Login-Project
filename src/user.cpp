@@ -11,6 +11,8 @@ userSecret_t User::getSecret() const noexcept { return this->secret; }
 
 userName_t User::getName() const noexcept { return this->name; }
 
+userPassword_t User::getPassword() const noexcept { return this->password; }
+
 // any password verification will be handled before this point
 void User::setPassword(const userPassword_t &newPassword) noexcept { this->password = newPassword; }
 

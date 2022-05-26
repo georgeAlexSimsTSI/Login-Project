@@ -30,6 +30,8 @@ public:
 
     userName_t getName() const noexcept;
 
+    userPassword_t getPassword() const noexcept;
+
     // any password verification will be handled before this point
     void setPassword(const userPassword_t &newPassword) noexcept;
 

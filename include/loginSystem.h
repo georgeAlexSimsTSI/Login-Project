@@ -5,15 +5,22 @@
 #include <string>
 #include <iostream>
 #include <memory>
+#include <string>
+#include <fstream>
 
 #include "./user.h"
 #include "./userInput.h"
+
+#include <json.hpp>
+using json = nlohmann::json;
 
 class LoginSystem
 {
 private:
     // usernames and the User instance
     std::map<std::string, std::shared_ptr<User>> users;
+
+    std::string fileName;
 
     /**
      * @brief method that takes an already constructed user and adds it to the system
@@ -66,7 +73,16 @@ private:
      */
     void loginScreen();
 
+    void saveToFile();
+
+    void loadFromFile();
+
 public:
+    explicit LoginSystem(const std::string &fileName) : fileName(fileName) { loadFromFile(); };
+    LoginSystem() : LoginSystem("users.json"){};
+    ~LoginSystem() { saveToFile(); }
+    LoginSystem(LoginSystem &&) = default;
+
     void run();
 };
 
