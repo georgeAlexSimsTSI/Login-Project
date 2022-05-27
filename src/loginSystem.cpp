@@ -72,15 +72,14 @@ std::shared_ptr<User> LoginSystem::userLogIn(const userName_t &userName, const u
     return nullptr;
 }
 
-void LoginSystem::userMenu(std::shared_ptr<User> &user) // may make changes to it later so for now its not const
+void LoginSystem::userMenu(std::shared_ptr<User> user) // may make changes to it later so for now its not const
 {
     system("cls");
     // will add more options here later
     auto name = user->getName();
     auto secret = user->getSecret();
 
-    bool loopCondition = true;
-    while (loopCondition)
+    while (true)
     {
         std::string inputMessage = "To display your secret enter 1: \nTo change your password enter 2: \nTo delete your account enter 3: \nTo logout enter 4: \nInput: ";
         int userInput = 0;
@@ -97,17 +96,49 @@ void LoginSystem::userMenu(std::shared_ptr<User> &user) // may make changes to i
         case 3:
             users.erase(name.get());
         case 4:
-            loopCondition = false;
-            break;
+            return;
         default:
             std::cout << "Unrecognized choice\n";
         }
     }
 }
 
-void LoginSystem::adminMenu(std::shared_ptr<User> &user)
+void LoginSystem::adminMenu(std::shared_ptr<User> user)
 {
-    // unimplemented
+    system("cls");
+    auto name = user->getName();
+    auto secret = user->getSecret();
+
+    while (true)
+    {
+        std::string inputMessage = "To switch to normal user mode enter 1: \nTo unlock another users account enter 2: \nTo get access another users account enter 3: \nTo reset users password enter 4: \nTo exit enter 5: \nEnter:  ";
+        int userInput = 0;
+        userInput::validateInput(userInput, inputMessage);
+
+        switch (userInput)
+        {
+        case 1:
+            userMenu(user);
+            return;
+        case 2:
+            // unlock a user account
+            // unimplemented
+            break;
+        case 3:
+            // access other users account
+            userMenu(selectUser());
+            break;
+        case 4:
+            // reset another users password
+            changePassword(selectUser());
+            break;
+        case 5:
+            // exit
+            return;
+        default:
+            std::cout << "Unrecognized choice\n";
+        }
+    }
 }
 
 void LoginSystem::loginScreen() noexcept
@@ -225,6 +256,25 @@ void LoginSystem::listUsers() noexcept
     for (const auto &[userName, user] : users)
     {
         std::cout << userName << '\n';
+    }
+}
+
+std::shared_ptr<User> LoginSystem::selectUser() noexcept
+{
+    if (users.size() == 0)
+        return nullptr;
+
+    while (true)
+    {
+        listUsers();
+        std::string selectUserPrompt = "Enter the username: ", userName;
+        userInput::validateInput(userName, selectUserPrompt);
+        if (users.find(userName) == users.end())
+        {
+            std::cout << "No such user.\n";
+            continue;
+        }
+        return users[userName];
     }
 }
 

@@ -59,14 +59,14 @@ private:
      *
      * @param user
      */
-    void userMenu(std::shared_ptr<User> &user);
+    void userMenu(std::shared_ptr<User> user);
 
     /**
      * @brief will display menu for the user and call relevant methods based on inputs
      *
      * @param user
      */
-    void adminMenu(std::shared_ptr<User> &user);
+    void adminMenu(std::shared_ptr<User> user);
 
     /**
      * @brief will take user inputs and attempt to login, if successful it will then call the relevant menu
@@ -81,6 +81,8 @@ private:
     void listUsers() noexcept;
 
     void changePassword(const std::shared_ptr<User> &user) noexcept;
+
+    std::shared_ptr<User> selectUser() noexcept;
 
 public:
     explicit LoginSystem(const std::string &fileName) : fileName(fileName) { loadFromFile(); };
