@@ -74,12 +74,27 @@ private:
      */
     void loginScreen() noexcept;
 
+    /**
+     * @brief Takes the current map of users constructs a Json representation and then writes this to a file
+     */
     void saveToFile() noexcept;
 
+    /**
+     * @brief Tries to open the file that was designated at construction and pipe the contents of this file into a json object.
+     * using this json object we then populate the users map. If this fails then the users map is left blank.
+     */
     void loadFromFile() noexcept;
 
+    /**
+     * @brief Prints the usernames of everyone currently stored in the system
+     */
     void listUsers() noexcept;
 
+    /**
+     * @brief Method that allows a user to change their password. It cant be the same as the previous password.
+     *
+     * @param user The user that is changing their password.
+     */
     void changePassword(const std::shared_ptr<User> &user) noexcept;
 
     std::shared_ptr<User> selectUser() noexcept;
@@ -90,6 +105,10 @@ public:
     ~LoginSystem() { saveToFile(); }
     LoginSystem(LoginSystem &&) = default;
 
+    /**
+     * @brief main loop of the program that takes user input and calls relevant methods
+     *
+     */
     void run();
 };
 

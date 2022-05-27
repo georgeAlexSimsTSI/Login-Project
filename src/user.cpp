@@ -1,9 +1,6 @@
 #include "../include/user.h"
 
-bool User::logIn(const userPassword_t &enteredPassword) const noexcept
-{
-    return enteredPassword.get() == this->password.get();
-}
+bool User::logIn(const userPassword_t &enteredPassword) const noexcept { return enteredPassword.get() == this->password.get(); }
 
 bool User::isAdmin() const noexcept { return this->admin; }
 

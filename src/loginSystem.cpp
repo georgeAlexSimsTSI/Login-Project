@@ -5,7 +5,7 @@ bool LoginSystem::addUser(const User &newUser) noexcept
     auto userName = newUser.getName().get();
 
     // check if there is already a user by this name in the map
-    if (users.find(userName) != users.end())
+    if (users.find(userName) != users.end()) // users . contains
     {
         return false;
     }
@@ -15,7 +15,6 @@ bool LoginSystem::addUser(const User &newUser) noexcept
     return true;
 }
 
-// redo this later to add password requirement checks
 void LoginSystem::addNewUser() noexcept
 {
     system("cls");
@@ -88,14 +87,18 @@ void LoginSystem::userMenu(std::shared_ptr<User> user) // may make changes to it
         switch (userInput)
         {
         case 1:
+            // get users secret
             std::cout << "User: " << name.get() << "'s great secret is: " << secret.get() << "\n";
             break;
         case 2:
+            // change password
             changePassword(user);
             break;
         case 3:
+            // delete account
             users.erase(name.get());
         case 4:
+            // exit
             return;
         default:
             std::cout << "Unrecognized choice\n";
@@ -263,7 +266,7 @@ std::shared_ptr<User> LoginSystem::selectUser() noexcept
 {
     if (users.size() == 0)
         return nullptr;
-
+        
     while (true)
     {
         listUsers();
