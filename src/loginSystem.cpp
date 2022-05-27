@@ -177,7 +177,7 @@ void LoginSystem::saveToFile() noexcept
         auto admin = user->isAdmin();
         j[i]["username"] = userName;
         j[i]["password"] = password;
-        j[i]["secret"] = secret;
+        j[i]["secret"] = secret; // wanted to somehow encode and decrypt this using the password string but didn't have time
         j[i]["admin"] = admin;
         ++i;
     }
@@ -189,25 +189,34 @@ void LoginSystem::saveToFile() noexcept
 
 void LoginSystem::loadFromFile() noexcept
 {
-    // std::cout << "Loading from file...\n";
     if (std::ifstream file{fileName})
     {
-
-        json j;
-        file >> j;
-
-        for (int i = 0; i < j.size(); ++i)
+        try
         {
-            auto tmp = j[i];
-            auto name = static_cast<std::string>(j[i]["username"]);
-            auto password = static_cast<size_t>(j[i]["password"]);
-            auto secret = static_cast<std::string>(j[i]["secret"]);
-            auto admin = static_cast<bool>(j[i]["admin"]);
-            User user(userName_t{name}, userPassword_t{password}, userSecret_t{secret}, admin);
-            addUser(user);
+            json j;
+            file >> j;
+
+            for (int i = 0; i < j.size(); ++i)
+            {
+                auto tmp = j[i];
+                auto name = static_cast<std::string>(j[i]["username"]);
+                auto password = static_cast<size_t>(j[i]["password"]);
+                auto secret = static_cast<std::string>(j[i]["secret"]);
+                auto admin = static_cast<bool>(j[i]["admin"]);
+                User user(userName_t{name}, userPassword_t{password}, userSecret_t{secret}, admin);
+                addUser(user);
+            }
+        }
+        catch (const nlohmann::detail::parse_error &e)
+        {
+            // this mainly occurs if the json file is blank
+            std::cout << "Error loading in json file \n";
+        }
+        catch (...)
+        {
+            std::cout << "Unexpected error when loading in file \n";
         }
     }
-    // std::cout << "Unable to open file! \n";
     return;
 }
 
